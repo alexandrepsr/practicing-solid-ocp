@@ -38,10 +38,15 @@ export default class Renting {
   }
 
   calculate(car: Car) {
-    this.duration =
-      (this.returnDate.getTime() - this.pickupDate.getTime()) /
-      (1000 * 60 * 60 * 24);
-
+    if (car.type == "day") {
+      this.duration =
+        (this.returnDate.getTime() - this.pickupDate.getTime()) /
+        (1000 * 60 * 60 * 24);
+    } else if (car.type == "hour") {
+      this.duration =
+        (this.returnDate.getTime() - this.pickupDate.getTime()) /
+        (1000 * 60 * 60);
+    }
     this.price = this.duration * car.price;
   }
 
