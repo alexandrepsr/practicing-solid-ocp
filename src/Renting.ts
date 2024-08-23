@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import Car from "./Car";
+import { PriceCalculatorFactor } from "./PriceCalculator";
 
 export default class Renting {
   constructor(
@@ -37,17 +38,14 @@ export default class Renting {
     );
   }
 
+  // open/closed principle
   calculate(car: Car) {
-    if (car.type == "day") {
-      this.duration =
-        (this.returnDate.getTime() - this.pickupDate.getTime()) /
-        (1000 * 60 * 60 * 24);
-    } else if (car.type == "hour") {
-      this.duration =
-        (this.returnDate.getTime() - this.pickupDate.getTime()) /
-        (1000 * 60 * 60);
-    }
-    this.price = this.duration * car.price;
+    const { duration, price } = PriceCalculatorFactor.create(
+      car.type
+    ).calculate(this.pickupDate, this.returnDate, car.price);
+
+    this.duration = duration;
+    this.price = price;
   }
 
   getStatus(): string {
