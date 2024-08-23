@@ -1,41 +1,32 @@
 /**
  * SOLID - Using Open/Closed Principle
+ * Template Method Pattern
  */
-export default interface PriceCalculator {
-  calculate(
-    pickupDate: Date,
-    returnDate: Date,
-    carPrice: number
-  ): { duration: number; price: number };
-}
-
-export class DayPriceCalculator implements PriceCalculator {
+export default abstract class PriceCalculator {
   calculate(
     pickupDate: Date,
     returnDate: Date,
     carPrice: number
   ): { duration: number; price: number } {
-    const duration =
-      (returnDate.getTime() - pickupDate.getTime()) / (1000 * 60 * 60 * 24);
-
+    const duration = this.calculateDuration(pickupDate, returnDate);
     const price = duration * carPrice;
-
     return { duration, price };
+  }
+
+  abstract calculateDuration(pickupDate: Date, returnDate: Date): number;
+}
+
+export class DayPriceCalculator extends PriceCalculator {
+  calculateDuration(pickupDate: Date, returnDate: Date): number {
+    return (
+      (returnDate.getTime() - pickupDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
   }
 }
 
-export class HourPriceCalculator implements PriceCalculator {
-  calculate(
-    pickupDate: Date,
-    returnDate: Date,
-    carPrice: number
-  ): { duration: number; price: number } {
-    const duration =
-      (returnDate.getTime() - pickupDate.getTime()) / (1000 * 60 * 60);
-
-    const price = duration * carPrice;
-
-    return { duration, price };
+export class HourPriceCalculator extends PriceCalculator {
+  calculateDuration(pickupDate: Date, returnDate: Date): number {
+    return (returnDate.getTime() - pickupDate.getTime()) / (1000 * 60 * 60);
   }
 }
 
